@@ -10,28 +10,29 @@ const Stopwatch = () => {
 
     }
     const reset = ()=>{
+        setTimeRunning(false)
         setTime(0)
     }
     
     useEffect(() => {
         let intervalId;
         if (timeRunning) {
-          intervalId = setInterval(() => setTime(prev=>prev+1), 10);
+          intervalId = setInterval(() => setTime(prev=>prev+1), 1000);
         }
         return () => clearInterval(intervalId);
       }, [timeRunning, time]);
 
-    const minutes = Math.floor((time % 360000) / 6000);
-
-  
-    const seconds = Math.floor((time % 6000) / 100);
+    const timeFormat = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
+  };
 
     
   return (
     <div>
         <h1>Stopwatch</h1>
-        <p>Time: {minutes.toString().padStart(1, "0")}:
-        {seconds.toString().padStart(2, "0")}</p>
+        <p>Time: {timeFormat(time)}</p>
         <div>
             <button onClick={startStop}> {timeRunning ? "Stop" : "Start"}</button>
             <button onClick={reset}>Reset</button>
